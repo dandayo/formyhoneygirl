@@ -7,25 +7,28 @@ import shutil
 import requests
 os.system('cls')
 
-last_date = (date.today())
-yesterday = print(date.today() + timedelta(days=-1))
-fist_date = date(1995, 6, 16)
 
-link_today = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=" + \
-    str(last_date)
-link_yesterday = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=" + \
-    str(yesterday)
-link_random = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=" + str()
+def today():
+    last_date = (date.today())
 
-open_link = urllib.request.urlopen(link_today)
+    yesterday = print(date.today() + timedelta(days=-1))
+    fist_date = date(1995, 6, 16)
 
-data = open_link.read()
-
-data.decode('utf-8')
-data = eval(data)
+    link_today = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=" + \
+        str(last_date)
+    # link_yesterday = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=" + \
+    #     str(yesterday)
+    # link_random = "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=" + str()
 
 
-def link():
+def image_url():
+    open_link = urllib.request.urlopen(today)
+
+    data = open_link.read()
+
+    data.decode('utf-8')
+    data = eval(data)
+
     with open('data.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
@@ -34,16 +37,23 @@ def link():
         print(image_url["url"])
 
 
-filelName = link.split("/")[-1]+".jpg"
+print(image_url())
 
-answer = requests.get(link, stream=True)
 
-if answer.status_code == 200:
-    answer.raw.decode_content = True
+def download_image():
+    filelName = image_url.split("/")[-1]+".jpg"
 
-    with open(filelName, 'wb') as info:
-        shutil.copyfileobj(answer.raw, info)
+    answer = requests.get(image_url, stream=True)
 
-    print("Kuvanlataaminen onnistui", filelName)
-else:
-    print("Kuvaa ei voitu ladata.")
+    if answer.status_code == 200:
+        answer.raw.decode_content = True
+
+        with open(filelName, 'wb') as info:
+            shutil.copyfileobj(answer.raw, info)
+
+        print("Kuvanlataaminen onnistui", filelName)
+    else:
+        print("Kuvaa ei voitu ladata.")
+
+
+download_image()
